@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=2 format=3 uid="uid://be5jaogbww40w"]
+
+[ext_resource type="Script" uid="uid://cm5fs3eb411r5" path="res://scripts/items/weapon_data.gd" id="1_g733e"]
+
+[resource]
+script = ExtResource("1_g733e")
+weapon_name = "Standard Longsword"
+metadata/_custom_type_script = "uid://cm5fs3eb411r5"

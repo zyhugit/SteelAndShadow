@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5trh2e2xsg3f"]
+
+[ext_resource type="Script" uid="uid://ba6jpkyj1xend" path="res://scripts/core/test_complete_combat.gd" id="1_uhqqe"]
+
+[node name="TestScene" type="Node"]
+script = ExtResource("1_uhqqe")

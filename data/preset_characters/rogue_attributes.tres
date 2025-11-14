@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="CharacterAttributes" load_steps=2 format=3 uid="uid://ca13i3ll7tms1"]
+
+[ext_resource type="Script" uid="uid://c056fhtk6lr2x" path="res://scripts/core/character_attributes.gd" id="1_66hu2"]
+
+[resource]
+script = ExtResource("1_66hu2")
+agility = 6
+wits = 6
+metadata/_custom_type_script = "uid://c056fhtk6lr2x"

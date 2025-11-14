@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="ShieldData" load_steps=2 format=3 uid="uid://clu1jx88efvxl"]
+
+[ext_resource type="Script" uid="uid://w3txq1lq440p" path="res://scripts/items/shield_data.gd" id="1_sw0hb"]
+
+[resource]
+script = ExtResource("1_sw0hb")
+metadata/_custom_type_script = "uid://w3txq1lq440p"

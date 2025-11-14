@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=8 format=3 uid="uid://bglhj731tsdhi"]
+
+[ext_resource type="Script" uid="uid://bw065l4jjwul8" path="res://scripts/character/character_data.gd" id="1_i8ejo"]
+[ext_resource type="Resource" uid="uid://difqshqso6wh" path="res://data/preset_characters/warrior_attributes.tres" id="1_u1itm"]
+[ext_resource type="Resource" uid="uid://jmu67fc65tiy" path="res://data/armor/chainmail.tres" id="2_elbjh"]
+[ext_resource type="Script" uid="uid://bkvyseoghlgf7" path="res://scripts/character/equipment.gd" id="3_vvrfw"]
+[ext_resource type="Resource" uid="uid://clu1jx88efvxl" path="res://data/shields/heater_shield.tres" id="4_scs0m"]
+[ext_resource type="Resource" uid="uid://be5jaogbww40w" path="res://data/weapons/longsword_standard.tres" id="5_s6lvo"]
+
+[sub_resource type="Resource" id="Resource_l05dc"]
+script = ExtResource("3_vvrfw")
+weapon = ExtResource("5_s6lvo")
+shield = ExtResource("4_scs0m")
+armor = ExtResource("2_elbjh")
+metadata/_custom_type_script = "uid://bkvyseoghlgf7"
+
+[resource]
+script = ExtResource("1_i8ejo")
+character_name = "Ironclad Warrior"
+attributes = ExtResource("1_u1itm")
+equipment = SubResource("Resource_l05dc")
+metadata/_custom_type_script = "uid://bw065l4jjwul8"

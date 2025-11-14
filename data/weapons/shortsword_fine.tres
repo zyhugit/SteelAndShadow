@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=2 format=3 uid="uid://bbm8513vsi3l3"]
+
+[ext_resource type="Script" uid="uid://cm5fs3eb411r5" path="res://scripts/items/weapon_data.gd" id="1_r5mfv"]
+
+[resource]
+script = ExtResource("1_r5mfv")
+damage_rating = 7
+brawn_modifier = 1
+attack_tn_swing = 5
+attack_tn_thrust = 5
+defense_tn_parry = 5
+metadata/_custom_type_script = "uid://cm5fs3eb411r5"
