@@ -19,4 +19,7 @@ script = ExtResource("1_i8ejo")
 character_name = "Ironclad Warrior"
 attributes = ExtResource("1_u1itm")
 equipment = SubResource("Resource_l05dc")
+proficiencies = {
+0: 5
+}
 metadata/_custom_type_script = "uid://bw065l4jjwul8"

@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="EncounterData" load_steps=11 format=3 uid="uid://dkmy43und0fpc"]
+
+[ext_resource type="Script" uid="uid://c056fhtk6lr2x" path="res://scripts/core/character_attributes.gd" id="1_erhfr"]
+[ext_resource type="Script" uid="uid://bw065l4jjwul8" path="res://scripts/character/character_data.gd" id="1_fbvbl"]
+[ext_resource type="Script" uid="uid://iyy4ypxxpqd2" path="res://scripts/combat/encounter_data.gd" id="1_ysmso"]
+[ext_resource type="Resource" uid="uid://bcpoao0gm21eg" path="res://data/armor/leather_jack.tres" id="2_3244q"]
+[ext_resource type="Resource" uid="uid://bglhj731tsdhi" path="res://data/preset_characters/warrior_complete.tres" id="2_erhfr"]
+[ext_resource type="Script" uid="uid://bkvyseoghlgf7" path="res://scripts/character/equipment.gd" id="3_uwygk"]
+[ext_resource type="Resource" uid="uid://be5jaogbww40w" path="res://data/weapons/longsword_standard.tres" id="4_ylcxt"]
+
+[sub_resource type="Resource" id="Resource_37fcp"]
+script = ExtResource("1_erhfr")
+wits = 3
+presence = 3
+metadata/_custom_type_script = "uid://c056fhtk6lr2x"
+
+[sub_resource type="Resource" id="Resource_qww80"]
+script = ExtResource("3_uwygk")
+weapon = ExtResource("4_ylcxt")
+armor = ExtResource("2_3244q")
+metadata/_custom_type_script = "uid://bkvyseoghlgf7"
+
+[sub_resource type="Resource" id="Resource_5h8it"]
+script = ExtResource("1_fbvbl")
+character_name = "Bandit Raider"
+attributes = SubResource("Resource_37fcp")
+equipment = SubResource("Resource_qww80")
+proficiencies = {
+0: 3
+}
+metadata/_custom_type_script = "uid://bw065l4jjwul8"
+
+[resource]
+script = ExtResource("1_ysmso")
+encounter_name = "Duel: Warrior vs Bandit"
+description = "A fierce duel between an armored warrior and a cunning bandit"
+player_character = ExtResource("2_erhfr")
+enemy_character = SubResource("Resource_5h8it")
+victory_text = "The bandit falls to your blade!"
+defeat_text = "You have been bested..."
+metadata/_custom_type_script = "uid://iyy4ypxxpqd2"
