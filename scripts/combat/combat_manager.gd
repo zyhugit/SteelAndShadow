@@ -8,7 +8,9 @@ extends Node
 ## Flow control
 @export var enable_round_pause: bool = true
 @export var round_pause_duration: float = 0.5
-@export var auto_simulate: bool = false  # If true, AI controls both sides
+@export var enable_action_pause: bool = true  # NEW
+@export var action_pause_duration: float = 0.8  # NEW - pause after each action
+@export var auto_simulate: bool = false
 var ai_controller: AIController = null
 
 ## Signals for UI to react to combat events
@@ -18,6 +20,14 @@ signal exchange_started(exchange_number: int, attacker: CharacterData)
 signal attack_resolved(result: CombatResult, attacker: CharacterData, defender: CharacterData)
 signal round_ended(round_number: int)
 signal combat_ended(winner: CharacterData, loser: CharacterData)
+
+## NEW: Add this signal with the others at the top
+signal player_action_requested(character: CharacterData, is_attacking: bool)
+
+## NEW: Add these state variables
+var awaiting_player_input: bool = false
+var player_attack: AttackManeuver = null
+var player_defense: DefenseManeuver = null
 
 ## Combat participants
 var player: CharacterData
@@ -43,6 +53,11 @@ func set_pause_enabled(enabled: bool):
 ## Set pause duration
 func set_pause_duration(seconds: float):
 	round_pause_duration = seconds
+	
+## Wait for a brief pause (if enabled)
+func _pause_for_action():
+	if enable_action_pause:
+		await get_tree().create_timer(action_pause_duration).timeout
 	
 ## Initialize combat with two fighters
 func start_combat(player_character: CharacterData, enemy_character: CharacterData):
@@ -130,10 +145,23 @@ func start_exchange():
 	
 	exchange_started.emit(current_exchange, initiative_holder)
 	
-	# In a real game, this is where we'd wait for player input
-	# For now, we'll simulate both sides acting
-	# (In Day 8-10 we'll add UI and player control)
-	# If auto-simulating, execute exchange automatically
+	var attacker = initiative_holder
+	var defender = get_opponent(attacker)
+	
+	# Check if player input is needed
+	if not auto_simulate:
+		if attacker == player:
+			# Player is attacking
+			awaiting_player_input = true
+			player_action_requested.emit(player, true)
+			return  # Wait for player input
+		elif defender == player:
+			# Player is defending  
+			awaiting_player_input = true
+			player_action_requested.emit(player, false)
+			return  # Wait for player input
+	
+	# If we get here, it's AI vs AI or auto_simulate is on
 	if auto_simulate and ai_controller:
 		_auto_execute_exchange()
 
@@ -154,6 +182,7 @@ func _auto_execute_exchange():
 		defense_action.defense
 	)
 
+## MODIFY: execute_exchange to add pauses
 ## Execute an attack/defense exchange
 func execute_exchange(
 	attacker: CharacterData,
@@ -182,6 +211,9 @@ func execute_exchange(
 		print("ERROR: Defender doesn't have enough CP!")
 		return
 	
+	# NEW: Pause to show allocations
+	await _pause_for_action()
+	
 	# Resolve the attack
 	var result = resolver.resolve_attack(
 		attack, defense,
@@ -193,6 +225,12 @@ func execute_exchange(
 	# Handle fumble penalty
 	if result.attacker_fumbled and result.attacker_dice_lost > 0:
 		attacker.combat_pool.apply_shock(result.attacker_dice_lost)
+	
+	# Emit result immediately so UI can show it
+	attack_resolved.emit(result, attacker, defender)
+	
+	# NEW: Pause to let player see the result
+	await _pause_for_action()
 	
 	# Calculate damage if hit
 	if result.hit:
@@ -207,6 +245,9 @@ func execute_exchange(
 		# Apply wound
 		if result.damage_wound:
 			apply_wound(defender, result.damage_wound)
+			
+			# NEW: Extra pause after wounds
+			await _pause_for_action()
 	
 	# Handle initiative changes
 	if result.initiative_stolen:
@@ -222,8 +263,6 @@ func execute_exchange(
 	if result.combat_disengaged:
 		print("Combat disengaged! New initiative next round.")
 		initiative_holder = null
-	
-	attack_resolved.emit(result, attacker, defender)
 	
 	# Track statistics
 	stats.total_exchanges += 1
@@ -384,6 +423,39 @@ func get_opponent(character: CharacterData) -> CharacterData:
 func is_combat_active() -> bool:
 	return combat_active
 	
+## NEW: Function to receive player's action
+func receive_player_action(attack: AttackManeuver, defense: DefenseManeuver):
+	if not awaiting_player_input:
+		print("ERROR: Not waiting for player input!")
+		return
+	
+	awaiting_player_input = false
+	
+	# Store player's choices
+	player_attack = attack
+	player_defense = defense
+	
+	# Now get AI's action and execute
+	var attacker = initiative_holder
+	var defender = get_opponent(attacker)
+	
+	var final_attack: AttackManeuver
+	var final_defense: DefenseManeuver
+	
+	if attacker == player:
+		# Player is attacking, AI defends
+		final_attack = player_attack
+		var ai_action = ai_controller.decide_action(defender, attacker, false)
+		final_defense = ai_action.defense
+	else:
+		# AI is attacking, player defends
+		var ai_action = ai_controller.decide_action(attacker, defender, true)
+		final_attack = ai_action.attack
+		final_defense = player_defense
+	
+	# Execute the exchange
+	execute_exchange(attacker, defender, final_attack, final_defense)
+
 ## Combat statistics (for post-combat display)
 class CombatStats:
 	var total_rounds: int = 0

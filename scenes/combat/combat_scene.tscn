@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://bdifvk6ohbf1k"]
+[gd_scene load_steps=5 format=3 uid="uid://bdifvk6ohbf1k"]
 
 [ext_resource type="Script" uid="uid://28hwanwfoglj" path="res://scenes/combat/combat_scene.gd" id="1_jecyb"]
+[ext_resource type="PackedScene" uid="uid://o4im1182wkw1" path="res://scenes/ui/action_panel.tscn" id="2_7cuye"]
+[ext_resource type="AudioStream" uid="uid://cmuacihyaxrmi" path="res://assets/sword-slash-and-swing-185432.mp3" id="3_3cl4e"]
+[ext_resource type="AudioStream" uid="uid://bkbcnjhanfvgq" path="res://assets/item-swing-sfx-3-409079.mp3" id="4_kltxb"]
 
 [node name="CombatScene" type="Node2D"]
 script = ExtResource("1_jecyb")
@@ -152,3 +155,13 @@ bbcode_enabled = true
 fit_content = true
 scroll_following = true
 scroll_following_visible_characters = true
+
+[node name="ActionPanel" parent="UI" instance=ExtResource("2_7cuye")]
+z_index = 10
+size_flags_horizontal = 4
+
+[node name="HitSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_3cl4e")
+
+[node name="MissSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_kltxb")
